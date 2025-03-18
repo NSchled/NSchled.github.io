@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>24 Counter Buttons with CSV Presets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .counter-box {
+            display: flex;
+            flex-direction: column; /* Stack buttons vertically */
+            align-items: center;
+            padding: 5px;
+            border-radius: 5px;
+            box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            margin: 5px; /* Space between counter boxes */
+        }
+        button {
+            font-size: 12px;
+            padding: 3px 6px;
+            cursor: pointer;
+        }
+        .counter {
+            font-size: 14px;
+            min-width: 30px;
+            text-align: center;
+            font-weight: bold;
+            margin: 5px 0; /* Space between counter and buttons */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>24 Counter Buttons with CSV Presets</h1>
+    <p>Upload a CSV file to load preset values.</p>
+
+    <input type="file" id="csvFileInput" accept=".csv" onchange="loadCSV(event)">
+    <br><br>
+
+    <div class="container" id="counterContainer"></div>
+
+    <br>
+    <button onclick="downloadCSV()">📥 Download Final Values as CSV</button>
+
+    <script>
+        const numCounters = 24;
+        let counters = new Array(numCounters).fill(0); // Default to zeros
+
+        function createCounters() {
+            const container = document.getElementById("counterContainer");
+            container.innerHTML = ""; // Clear previous elements
+
+            for (let i = 0; i < numCounters; i++) {
+                let counterBox = document.createElement("div");
+                counterBox.classList.add("counter-box");
+
+                let minusBtn = document.createElement("button");
+                minusBtn.textContent = "➖";
+                minusBtn.onclick = () => updateCounter(i, -1);
+
+                let counterDisplay = document.createElement("span");
+                counterDisplay.textContent = counters[i];
+                counterDisplay.classList.add("counter");
+                counterDisplay.id = `counter-${i}`;
+
+                let plusBtn = document.createElement("button");
+                plusBtn.textContent = "➕";
+                plusBtn.onclick = () => updateCounter(i, 1);
+
+                counterBox.appendChild(plusBtn);
+                counterBox.appendChild(counterDisplay);
+                counterBox.appendChild(minusBtn);
+                container.appendChild(counterBox);
+            }
+        }
+
+        function updateCounter(index, value) {
+            counters[index] += value;
+            document.getElementById(`counter-${index}`).textContent = counters[index];
+        }
+
+        function loadCSV(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const lines = e.target.result.split("\n").slice(1); // Remove header row
+                counters = new Array(numCounters).fill(0); // Reset array
+
+                lines.forEach((line) => {
+                    const [index, value] = line.split(",");
+                    const i = parseInt(index) - 1; // Convert index to array position (0-based)
+                    if (i >= 0 && i < numCounters) {
+                        counters[i] = parseInt(value) || 0;
+                    }
+                });
+
+                createCounters(); // Update UI with new values
+            };
+            reader.readAsText(file);
+        }
+
+        function downloadCSV() {
+            let csvContent = "Counter Index,Final Value\n";
+            counters.forEach((value, index) => {
+                csvContent += `${index + 1},${value}\n`;
+            });
+
+            let blob = new Blob([csvContent], { type: "text/csv" });
+            let a = document.createElement("a");1
+            a.href = URL.createObjectURL(blob);
+            a.download = "final_counters.csv";
+            a.click();
+        }
+
+        createCounters(); // Initialize with default values
+    </script>
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <m1eta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heatmap Visualization</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        iframe {
+            width: 90%;
+            height: 600px;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Heatmap Visualization</h1>
+    
+    <iframe src="file:///Users/nico/Desktop/Excel/clickPage/heatmap.html"></iframe>
+    
+</body>
+</html>
+
+<!-- clicktool
+https://github.com/NSchled/energy/tree/124d62ce2f191202302e34fdc2a6268ca33093e7/clicktool -->
+<!-- https://github.com/NSchled/energy/clicktool/index.html -->
+
+<!--  https://NSchled.github.io/energy/clicktool/index.html -->
