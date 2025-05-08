@@ -13,8 +13,15 @@
         .container {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
-            width: 1500px;
+            justify-content: space-between;
+            width: 80%;
+            margin: 0 auto; /* optional: zentriert den Container */
+        }
+        .container9Bins {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            width: 75%;
             margin: 0 auto; /* optional: zentriert den Container */
         }
         .counter-box {
@@ -41,7 +48,7 @@
         }
         iframe {
             /* width: 90%; */
-            width: 1400px;
+            width: 1500px;
             height: 600px;
             border: none;
         }
@@ -49,7 +56,7 @@
 </head>
 <body>
 
-    <h1>Click Tool</h1>
+    <h1>Spread TradingTool</h1>
     <!-- <p>Upload a CSV file to load preset values.</p> -->
 
     <input type="file" id="csvFileInput" accept=".csv" onchange="loadCSV(event)">
@@ -57,10 +64,12 @@
     <iframe src="heatmaps/CH-Imbalance 1h.html"></iframe>
     <iframe src="heatmaps/CH-Imbalance 1h avg.html"></iframe>
     <div class="container" id="counterContainer24"></div>
-    <iframe src="tradeviews/Tempview.html"></iframe>
-    <div class="container" id="counterContainer9"></div>
-    <iframe src="tradeviews/IRRview.html"></iframe>
-    <div class="container" id="counterContainer9"></div>
+    <iframe src="tradeviews/Tempview_OP.html"></iframe>
+    <div class="container9Bins" id="counterContainer9"></div>
+    <iframe src="tradeviews/Tempview_PK.html"></iframe>
+    <div class="container9Bins" id="counterContainer9"></div>
+    <iframe src="tradeviews/IRRview_PK.html"></iframe>
+    <div class="container9Bins" id="counterContainer9_IRR"></div>
     <br>
 
     <button onclick="downloadCSV()">📥 Download Final Values as CSV</button>
@@ -127,6 +136,7 @@
     
                 createCounters("counterContainer24", counters24, "c24");
                 createCounters("counterContainer9", counters9, "c9");
+                createCounters("counterContainer9_IRR", counters9_IRR, "c9_IRR");
             };
             reader.readAsText(file);
         }
@@ -139,6 +149,9 @@
             counters9.forEach((value, index) => {
                 csvContent += `${index + 1 + counters24.length},${value}\n`;
             });
+            counters9_IRR.forEach((value, index) => {
+                csvContent += `c9_IRR-${index + 1},${value}\n`;
+            });
     
             const blob = new Blob([csvContent], { type: "text/csv" });
             const a = document.createElement("a");
@@ -150,110 +163,10 @@
         // Initialisierung
         createCounters("counterContainer24", counters24, "c24");
         createCounters("counterContainer9", counters9, "c9");
+        createCounters("counterContainer9_IRR", counters9, "c9_IRR");
     </script>
 
-    <!-- <script>
-        const numCounters24 = 24;
-        let counters = new Array(numCounters24).fill(0); // Default to zeros
-
-        function createCounters24() {
-            const container = document.getElementById("counterContainer");
-            container.innerHTML = ""; // Clear previous elements
-
-            for (let i = 0; i < numCounters24; i++) {
-                let counterBox = document.createElement("div");
-                counterBox.classList.add("counter-box");
-
-                let minusBtn = document.createElement("button");
-                minusBtn.textContent = "➖";
-                minusBtn.onclick = () => updateCounter(i, -1);
-
-                let counterDisplay = document.createElement("span");
-                counterDisplay.textContent = counters[i];
-                counterDisplay.classList.add("counter");
-                counterDisplay.id = `counter-${i}`;
-
-                let plusBtn = document.createElement("button");
-                plusBtn.textContent = "➕";
-                plusBtn.onclick = () => updateCounter(i, 1);
-
-                counterBox.appendChild(plusBtn);
-                counterBox.appendChild(counterDisplay);
-                counterBox.appendChild(minusBtn);
-                container.appendChild(counterBox);
-            }
-        }
-
-        function updateCounter(index, value) {
-            counters[index] += value;
-            document.getElementById(`counter-${index}`).textContent = counters[index];
-        }
-
-        function loadCSV(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const lines = e.target.result.split("\n").slice(1); // Remove header row
-                counters = new Array(numCounters).fill(0); // Reset array
-
-                lines.forEach((line) => {
-                    const [index, value] = line.split(",");
-                    const i = parseInt(index) - 1; // Convert index to array position (0-based)
-                    if (i >= 0 && i < numCounters) {
-                        counters[i] = parseInt(value) || 0;
-                    }
-                });
-
-                createCounters24(); // Update UI with new values
-            };
-            reader.readAsText(file);
-        }
-
-        function downloadCSV() {
-            let csvContent = "Counter Index,Final Value\n";
-            counters.forEach((value, index) => {
-                csvContent += `${index + 1},${value}\n`;
-            });
-
-            let blob = new Blob([csvContent], { type: "text/csv" });
-            let a = document.createElement("a");1
-            a.href = URL.createObjectURL(blob);
-            a.download = "final_counters.csv";
-            a.click();
-        }
-
-        createCounters24(); // Initialize with default values
-    </script> -->
 
 </body>
 </html>
 
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <m1eta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heatmap Visualization</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
-        }
-        iframe {
-            width: 90%;
-            height: 600px;
-            border: none;
-        }
-    </style>
-</head>
-<body>
-
-    <h1>Heatmap Visualization</h1>
-    
-    <iframe src="heatmaps/Spread DE-AEP 1h.html"></iframe>
-    
-</body>
-</html> -->
