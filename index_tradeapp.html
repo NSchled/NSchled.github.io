@@ -149,9 +149,9 @@
             counters9.forEach((value, index) => {
                 csvContent += `${index + 1 + counters24.length},${value}\n`;
             });
-            counters9_IRR.forEach((value, index) => {
-                csvContent += `c9_IRR-${index + 1},${value}\n`;
-            });
+            // counters9_IRR.forEach((value, index) => {
+            //     csvContent += `${index + 1 + counters24.length},${value}\n`;
+            // });
     
             const blob = new Blob([csvContent], { type: "text/csv" });
             const a = document.createElement("a");
