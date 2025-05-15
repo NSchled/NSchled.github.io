@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Klickbare Checkliste</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .checkliste {
+      list-style: none;
+      padding: 0;
+    }
+
+    .checkliste li {
+      padding: 10px;
+      margin-bottom: 8px;
+      background-color: #f0f0f0;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .checkliste li.erledigt {
+      background-color: #a6e3a1; /* Grün */
+      text-decoration: line-through;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Meine Checkliste</h1>
+  <ul class="checkliste">
+    <li onclick="umschalten(this)">Punkt 1 erledigt</li>
+    <li onclick="umschalten(this)">Punkt 2 erledigt</li>
+    <li onclick="umschalten(this)">Punkt 3 erledigt</li>
+</ul>
+
+  <script>
+    function umschalten(element) {
+      element.classList.toggle('erledigt');
+    }
+  </script>
+
+
+
+</body>
+</html>
