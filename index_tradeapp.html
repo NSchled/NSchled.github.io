@@ -8,20 +8,21 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            margin: 20px;
+            margin: 0px;
         }
         .container {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
+            /* justify-content: flex-end; */
             width: 80%;
             margin: 0 auto; /* optional: zentriert den Container */
         }
         .container9Bins {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
-            width: 75%;
+            justify-content: space-evenly;
+            width: 85%;
             margin: 0 auto; /* optional: zentriert den Container */
         }
         .counter-box {
@@ -48,10 +49,11 @@
         }
         iframe {
             /* width: 90%; */
-            width: 1500px;
-            height: 600px;
+            width: 1900px;
+            height: 800px;
             border: none;
         }
+
     </style>
 </head>
 <body>
@@ -79,7 +81,8 @@
         const numCounters9 = 9;
     
         let counters24 = new Array(numCounters24).fill(0);
-        let counters9 = new Array(numCounters9).fill(0);
+        let counters9_TOP = new Array(numCounters9).fill(0);
+        let counters9_TPK = new Array(numCounters9).fill(0)
         let counters9_IRR = new Array(numCounters9).fill(0);
     
         function createCounters(containerId, countersArray, prefix) {
@@ -89,33 +92,81 @@
             for (let i = 0; i < countersArray.length; i++) {
                 let counterBox = document.createElement("div");
                 counterBox.classList.add("counter-box");
-    
-                let minusBtn = document.createElement("button");
-                minusBtn.textContent = "➖";
-                minusBtn.onclick = () => updateCounter(prefix, i, -1);
-    
+                // Schieberegler erstellen
+                let slider = document.createElement("input");
+                slider.type = "range";
+                slider.min = -10; // Passe den Wertebereich nach Bedarf an
+                slider.max = 10;
+                slider.value = countersArray[i];
+                slider.step = 1;
+                slider.style.writingMode = "bt-lr"; // Für Firefox
+                slider.style.transform = "rotate(270deg)"; // Für andere Browser
+                // slider.style.position = "absolute";
+                // slider.style.left = "0px";
+                // slider.style.top = "10px";
+                slider.style.width = "50px";
+                slider.style.height = "60px";
+                counterBox.style.height = "120px"; 
+                slider.style.margin = "0px 0";
+                slider.oninput = function () {
+                    countersArray[i] = parseInt(slider.value);
+                    counterDisplay.textContent = countersArray[i];
+                    counterBox.style.backgroundColor = getCounterBoxColor(countersArray[i]);
+                };
+                slider.addEventListener("wheel", function(e) {
+                    e.preventDefault();
+                    let step = parseInt(slider.step) || 1;
+                    if (e.deltaY < 0) {
+                        slider.value = Math.min(parseInt(slider.value) + step, parseInt(slider.max));
+                    } else {
+                        slider.value = Math.max(parseInt(slider.value) - step, parseInt(slider.min));
+                    }
+                    countersArray[i] = parseInt(slider.value);
+                    counterDisplay.textContent = countersArray[i];
+                    counterBox.style.backgroundColor = getCounterBoxColor(countersArray[i]);
+                });
+                counterBox.style.backgroundColor = getCounterBoxColor(countersArray[i]);
+
                 let counterDisplay = document.createElement("span");
                 counterDisplay.textContent = countersArray[i];
                 counterDisplay.classList.add("counter");
                 counterDisplay.id = `${prefix}-counter-${i}`;
-    
-                let plusBtn = document.createElement("button");
-                plusBtn.textContent = "➕";
-                plusBtn.onclick = () => updateCounter(prefix, i, 1);
-    
-                counterBox.appendChild(plusBtn);
+
+                counterBox.appendChild(slider);
                 counterBox.appendChild(counterDisplay);
-                counterBox.appendChild(minusBtn);
                 container.appendChild(counterBox);
             }
         }
     
+        function getCounterBoxColor(val) {
+            // Blau: #3a7bd5, Weiß: #fff, Braun: #8B4513
+            if (val <= 0) {
+                // Interpolieren zwischen blau und weiß
+                let t = (val + 10) / 10; // -10 => 0, 0 => 1
+                // Blau: rgb(58,123,213), Weiß: rgb(255,255,255)
+                let r = Math.round(58 + (255 - 58) * t);
+                let g = Math.round(123 + (255 - 123) * t);
+                let b = Math.round(213 + (255 - 213) * t);
+                return `rgb(${r},${g},${b})`;
+            } else {
+                // Interpolieren zwischen weiß und braun
+                let t = val / 10; // 0 => 0, 10 => 1
+                // Weiß: rgb(255,255,255), Braun: rgb(139,69,19)
+                let r = Math.round(255 + (139 - 255) * t);
+                let g = Math.round(255 + (69 - 255) * t);
+                let b = Math.round(255 + (19 - 255) * t);
+                return `rgb(${r},${g},${b})`;
+            }
+        }
+
         function updateCounter(prefix, index, value) {
             let counters;
             if (prefix === "c24") {
                 counters = counters24;
-            } else if (prefix === "c9") {
-                counters = counters9;
+            } else if (prefix === "c9_TOP") {
+                counters = counters9_TOP;
+            } else if (prefix === "c9_TPK") {
+                counters = counters9_TPK;
             } else if (prefix === "c9_IRR") {
                 counters = counters9_IRR;
             }
@@ -144,23 +195,26 @@
     
                 createCounters("counterContainer24", counters24, "c24");
                 // createCounters("counterContainer9", counters9, "c9");
-                createCounters("counterContainer9_OP", counters9, "c9");
-                createCounters("counterContainer9_PK", counters9, "c9");
+                createCounters("counterContainer9_OP", counters9_TOP, "c9_TOP");
+                createCounters("counterContainer9_PK", counters9_TPK, "c9_TPK");
                 createCounters("counterContainer9_IRR", counters9_IRR, "c9_IRR");
             };
             reader.readAsText(file);
         }
     
         function downloadCSV() {
-            let csvContent = "Counter Index,Final Value\n";
+            let csvContent = "Counter Index,Input,value\n";
             counters24.forEach((value, index) => {
-                csvContent += `${index + 1},${value}\n`;
+                csvContent += `${index + 1},c24,${value}\n`;
             });
-            counters9.forEach((value, index) => {
-                csvContent += `${index + 1 + counters24.length},${value}\n`;
+            counters9_TOP.forEach((value, index) => {
+                csvContent += `${index + 1 + counters24.length},c9_TOP,${value}\n`;
+            });
+            counters9_TPK.forEach((value, index) => {
+                csvContent += `${index + 1 + counters24.length + counters9_TOP.length},c9_TPK,${value}\n`;
             });
             counters9_IRR.forEach((value, index) => {
-                csvContent += `${index + 1 + counters24.length + counters9.length},${value}\n`;
+                csvContent += `${index + 1 + counters24.length + counters9_TOP.length + counters9_TPK.length},c9_IRR,${value}\n`;
             });
     
             const blob = new Blob([csvContent], { type: "text/csv" });
@@ -172,8 +226,8 @@
     
         // Initialisierung
         createCounters("counterContainer24", counters24, "c24");
-        createCounters("counterContainer9_OP", counters9, "c9");
-        createCounters("counterContainer9_PK", counters9, "c9");
+        createCounters("counterContainer9_OP", counters9_TOP, "c9_TOP");
+        createCounters("counterContainer9_PK", counters9_TPK, "c9_TPK");
         createCounters("counterContainer9_IRR", counters9_IRR, "c9_IRR");
     </script>
 
