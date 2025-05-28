@@ -60,10 +60,19 @@
     <h1>Spread TradingTool</h1>
     <!-- <p>Upload a CSV file to load preset values.</p> -->
 
+
+
     <input type="file" id="csvFileInput" accept=".csv" onchange="loadCSV(event)">
     <br><br>
+    <select id="heatmapSelector" onchange="updateIframe()">
+        <option value="heatmaps/CH-Imbalance 1h.html">CH-Imbalance 1h</option>
+        <option value="heatmaps/CH-Imbalance.html">CH-Imbalance</option>
+        <!-- <option value="heatmaps/CH-Imbalance Montag.html">CH-Imbalance Montag</option> -->
+    </select>
+    <br><br>
+
+
     <iframe src="heatmaps/CH-Imbalance 1h.html"></iframe>
-    <!-- <iframe src="heatmaps/CH-Imbalance 1h avg.html"></iframe> -->
     <div class="container" id="counterContainer24"></div>
     <iframe src="tradeviews/Tempview_OP.html"></iframe>
     <div class="container9Bins" id="counterContainer9_OP"></div>
@@ -72,6 +81,9 @@
     <iframe src="tradeviews/IRRview_PK.html"></iframe>
     <div class="container9Bins" id="counterContainer9_IRR"></div>
     <br>
+
+
+
 
     <button onclick="downloadCSV()">📥 Download Final Values as CSV</button>
 
@@ -229,6 +241,23 @@
         createCounters("counterContainer9_OP", counters9_TOP, "c9_TOP");
         createCounters("counterContainer9_PK", counters9_TPK, "c9_TPK");
         createCounters("counterContainer9_IRR", counters9_IRR, "c9_IRR");
+
+        function updateIframe() {
+            const selectedValue = document.getElementById("heatmapSelector").value;
+            document.querySelector("iframe").src = selectedValue;
+        }
+
+        // JavaScript-Code zum Erstellen der Wochentagsoptionen
+        const wochentage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
+        const selectElement = document.getElementById("heatmapSelector");
+
+        wochentage.forEach(tag => {
+            const option = document.createElement("option");
+            option.value = `heatmaps/CH-Imbalance ${tag}.html`;
+            option.textContent = `CH-Imbalance ${tag}`;
+            selectElement.appendChild(option);
+        });
+
     </script>
 
 
