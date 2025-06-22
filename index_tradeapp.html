@@ -68,6 +68,7 @@
     <select id="heatmapSelector" onchange="updateIframe()">
         <option value="heatmaps/CH-Imbalance 1h.html">CH-Imbalance 1h</option>
         <option value="heatmaps/CH-Imbalance.html">CH-Imbalance</option>
+        <option value="heatmaps/AE CH.html">PRI-Imbalance total 15min</option>
         <!-- <option value="heatmaps/CH-Imbalance Montag.html">CH-Imbalance Montag</option> -->
     </select>
     <br><br>
@@ -254,8 +255,8 @@
 
         wochentage.forEach(tag => {
             const option = document.createElement("option");
-            option.value = `heatmaps/CH-Imbalance ${tag}.html`;
-            option.textContent = `CH-Imbalance ${tag}`;
+            option.value = `heatmaps/PRI-Imbalance ${tag}.html`;
+            option.textContent = `PRI-Imbalance ${tag}`;
             selectElement.appendChild(option);
         });
 
