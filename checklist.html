@@ -1,51 +1,154 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Klickbare Checkliste</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meine Webseite mit Checkliste</title>
+    <style>
+        /* Hier kommt dein CSS rein */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+        nav ul {
+            padding: 0;
+            list-style: none;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 20px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+            padding: 20px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #333;
+            color: #fff;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
 
-    .checkliste {
-      list-style: none;
-      padding: 0;
-    }
-
-    .checkliste li {
-      padding: 10px;
-      margin-bottom: 8px;
-      background-color: #f0f0f0;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-    }
-
-    .checkliste li.erledigt {
-      background-color: #a6e3a1; /* Grün */
-      text-decoration: line-through;
-      color: #333;
-    }
-  </style>
+        /* Spezifisches Styling für die Checkliste */
+        #myChecklist li {
+            list-style: none; /* Entfernt die Standard-Aufzählungszeichen */
+            margin-bottom: 8px;
+        }
+        #myChecklist input[type="checkbox"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        #myChecklist label {
+            cursor: pointer;
+            transition: text-decoration 0.3s ease, color 0.3s ease; /* Sanfter Übergang */
+        }
+    </style>
 </head>
 <body>
 
-  <h1>Meine Checkliste</h1>
-  <ul class="checkliste">
-    <li onclick="umschalten(this)">Punkt 1 erledigt</li>
-    <li onclick="umschalten(this)">Punkt 2 erledigt</li>
-    <li onclick="umschalten(this)">Punkt 3 erledigt</li>
-</ul>
+    <header>
+        <h1>Willkommen auf meiner Webseite</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Startseite</a></li>
+                <li><a href="#about">Über uns</a></li>
+                <li><a href="#services">Dienstleistungen</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <script>
-    function umschalten(element) {
-      element.classList.toggle('erledigt');
-    }
-  </script>
+    <div class="container">
+        <section id="home">
+            <h2>Startseite</h2>
+            <p>Dies ist der Inhalt deiner Startseite. Du kannst hier Informationen über dein Projekt, dein Unternehmen oder was auch immer du möchtest, hinzufügen.</p>
+            <p>Füge hier weitere Absätze, Bilder oder andere Elemente ein.</p>
+        </section>
 
+        <hr>
 
+        <section id="about">
+            <h2>Über uns</h2>
+            <p>Hier kannst du mehr über dich oder dein Team erzählen. Wer seid ihr? Was macht ihr? Was sind eure Werte?</p>
+        </section>
+
+        <hr>
+
+        <section id="services">
+            <h2>Dienstleistungen (Meine Checkliste)</h2>
+            <ul id="myChecklist">
+                <li>
+                    <input type="checkbox" id="item1">
+                    <label for="item1">Dienstleistung 1 erledigen</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="item2">
+                    <label for="item2">Dienstleistung 2 überprüfen</label>
+                </li>
+                <li>
+                    <input type="checkbox" id="item3">
+                    <label for="item3">Dienstleistung 3 planen</label>
+                </li>
+            </ul>
+        </section>
+
+        <hr>
+
+        <section id="contact">
+            <h2>Kontakt</h2>
+            <p>So kannst du uns erreichen:</p>
+            <address>
+                E-Mail: <a href="mailto:info@beispiel.de">info@beispiel.de</a><br>
+                Telefon: +49 123 456789<br>
+                Adresse: Beispielstraße 1, 12345 Beispielstadt
+            </address>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Deine Webseite. Alle Rechte vorbehalten.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checklist = document.getElementById('myChecklist');
+            if (checklist) {
+                checklist.addEventListener('change', function(event) {
+                    if (event.target.type === 'checkbox') {
+                        const label = event.target.nextElementSibling;
+                        if (label) {
+                            if (event.target.checked) {
+                                label.style.textDecoration = 'line-through';
+                                label.style.color = '#888';
+                            } else {
+                                label.style.textDecoration = 'none';
+                                label.style.color = '#333';
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
 
 </body>
 </html>
